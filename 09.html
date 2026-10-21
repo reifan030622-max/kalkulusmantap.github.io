@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KalkulusPro - Kalkulator Limit & Integral Terlengkap</title>
+    <meta name="description"
+        content="Kalkulator Limit dan Integral otomatis dengan langkah pengerjaan detail, visualisasi grafik interaktif, dan panduan belajar matematika kalkulus lengkap berdesain dark mode modern.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- KaTeX for LaTeX Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Chart.js for Visualizing Curves & Integrals -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+    <!-- Math Engine: Nerdamer (Symbolic Calculus) + Math.js -->
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/nerdamer.core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Algebra.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Calculus.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Solve.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.1/math.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Confetti for Quiz -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dark-theme">
+    <!-- Glow Backdrop -->
+    <div class="glow-bg-top"></div>
+    <div class="glow-bg-bottom"></div>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i data-lucide="function-square"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="logo-title">Kalkulus<span class="gradient-text">Pro</span></span>
+                    <span class="logo-tag">Limit & Integral Explorer</span>
+                </div>
+            </div>
+
+            <nav class="nav-tabs">
+                <button class="nav-tab-btn active" id="btn-tab-calc" data-target="section-calculator">
+                    <i data-lucide="calculator"></i>
+                    <span>Kalkulator</span>
+                </button>
+                <button class="nav-tab-btn" id="btn-tab-guide" data-target="section-guide">
+                    <i data-lucide="book-open"></i>
+                    <span>Panduan Belajar</span>
+                </button>
+                <button class="nav-tab-btn" id="btn-tab-quiz" data-target="section-quiz">
+                    <i data-lucide="award"></i>
+                    <span>Kuis & Latihan</span>
+                </button>
+            </nav>
+
+            <div class="header-actions">
+                <a href="#quick-cheatsheet" class="btn-ghost-pill" id="btn-quick-guide">
+                    <i data-lucide="sparkles"></i>
+                    <span>Rumus Kilat</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+
+        <!-- ==================== SECTION 1: KALKULATOR ==================== -->
+        <section id="section-calculator" class="content-section active">
+            <!-- Hero Banner -->
+            <div class="hero-header">
+                <div class="badge-pill">
+                    <span class="pulse-dot"></span>
+                    Kalkulator Simbolik & Langkah Pengerjaan Interaktif
+                </div>
+                <h1 class="hero-title">Hitung <span class="text-cyan">Limit</span> & <span
+                        class="text-purple">Integral</span>
+                    Dengan Solusi Rinci</h1>
+                <p class="hero-desc">Pahami alur penyelesaian matematika langkah-demi-langkah, dilengkapi grafik fungsi
+                    visual
+                    dan analisis matematis mendalam.</p>
+            </div>
+
+            <!-- Mode Selector (Limit vs Integral) -->
+            <div class="mode-switch-wrapper">
+                <div class="mode-switcher">
+                    <button class="mode-btn active" id="mode-limit" data-mode="limit">
+                        <span class="mode-icon"><i data-lucide="arrow-right-to-line"></i></span>
+                        <div class="mode-label">
+                            <strong>Kalkulator Limit</strong>
+                            <small>\(\lim_{x \to c} f(x)\)</small>
+                        </div>
+                    </button>
+                    <button class="mode-btn" id="mode-integral" data-mode="integral">
+                        <span class="mode-icon"><i data-lucide="sigma"></i></span>
+                        <div class="mode-label">
+                            <strong>Kalkulator Integral</strong>
+                            <small>\(\int f(x)\,dx\) & \(\int_a^b f(x)\,dx\)</small>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calculator Card -->
+            <div class="calc-grid">
+                <!-- Input Panel -->
+                <div class="calc-panel input-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-group">
+                            <i data-lucide="terminal" class="panel-icon"></i>
+                            <h2 id="calc-panel-title">Parameter Input Limit</h2>
+                        </div>
+                        <button class="btn-text-sm" id="btn-clear-input" title="Bersihkan Form">
+                            <i data-lucide="rotate-ccw"></i> Reset
+                        </button>
+                    </div>
+
+                    <!-- Sub-mode options for Integral (Tak Tentu vs Tentu) -->
+                    <div class="integral-sub-options" id="integral-sub-options" style="display: none;">
+                        <label class="radio-chip">
+                            <input type="radio" name="integral_type" value="indefinite" checked
+                                id="int-type-indefinite">
+                            <span><i data-lucide="infinity"></i> Integral Tak Tentu \(\int f(x)dx\)</span>
+                        </label>
+                        <label class="radio-chip">
+                            <input type="radio" name="integral_type" value="definite" id="int-type-definite">
+                            <span><i data-lucide="split"></i> Integral Tentu \(\int_a^b f(x)dx\)</span>
+                        </label>
+                    </div>
+
+                    <!-- Formula Input -->
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label for="input-function">Fungsi \(f(x)\):</label>
+                            <span class="helper-hint">Gunakan <code>*</code> untuk perkalian, <code>^</code> untuk
+                                pangkat</span>
+                        </div>
+                        <div class="input-glow-wrap">
+                            <input type="text" id="input-function" class="math-input"
+                                placeholder="contoh: (x^2 - 4) / (x - 2) atau sin(x)/x" value="(x^2 - 4)/(x - 2)"
+                                autocomplete="off" spellcheck="false">
+                            <button class="btn-input-clear" id="btn-clear-fn" title="Hapus"><i
+                                    data-lucide="x"></i></button>
+                        </div>
+                        <!-- Live Math Preview -->
+                        <div class="math-preview-box">
+                            <span class="preview-tag">Preview Rumus:</span>
+                            <div id="live-math-preview" class="katex-render-area">\(f(x) = \frac{x^2 - 4}{x - 2}\)</div>
+                        </div>
+                    </div>
+
+                    <!-- LIMIT SPECIFIC CONTROLS -->
+                    <div id="controls-limit" class="dynamic-controls">
+                        <div class="row-inputs">
+                            <div class="form-group flex-1">
+                                <label for="input-limit-target">Mendekati nilai (\(x \to c\)):</label>
+                                <div class="input-glow-wrap">
+                                    <input type="text" id="input-limit-target" class="math-input"
+                                        placeholder="misal: 2, 0, oo, -oo" value="2">
+                                </div>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="select-limit-direction">Arah Pendekatan:</label>
+                                <div class="select-glow-wrap">
+                                    <select id="select-limit-direction" class="math-select">
+                                        <option value="both">Dua Sisi (x &rarr; c)</option>
+                                        <option value="right">Sisi Kanan (x &rarr; c&#8314;)</option>
+                                        <option value="left">Sisi Kiri (x &rarr; c&#8315;)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INTEGRAL SPECIFIC CONTROLS (Definite Bounds) -->
+                    <div id="controls-integral" class="dynamic-controls" style="display: none;">
+                        <div class="row-inputs" id="definite-bounds-row" style="display: none;">
+                            <div class="form-group flex-1">
+                                <label for="input-bound-a">Batas Bawah (\(a\)):</label>
+                                <div class="input-glow-wrap">
+                                    <input type="text" id="input-bound-a" class="math-input"
+                                        placeholder="misal: 0, 1, -2" value="0">
+                                </div>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="input-bound-b">Batas Atas (\(b\)):</label>
+                                <div class="input-glow-wrap">
+                                    <input type="text" id="input-bound-b" class="math-input"
+                                        placeholder="misal: 3, pi, 4" value="3">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Virtual Keypad (Quick Symbol Buttons) -->
+                    <div class="keypad-wrapper">
+                        <span class="keypad-title">Simbol Cepat:</span>
+                        <div class="keypad-buttons">
+                            <button type="button" class="key-btn" data-insert="^2">x²</button>
+                            <button type="button" class="key-btn" data-insert="^">xⁿ</button>
+                            <button type="button" class="key-btn" data-insert="sqrt()">√</button>
+                            <button type="button" class="key-btn" data-insert="sin()">sin</button>
+                            <button type="button" class="key-btn" data-insert="cos()">cos</button>
+                            <button type="button" class="key-btn" data-insert="tan()">tan</button>
+                            <button type="button" class="key-btn" data-insert="e^x">eˣ</button>
+                            <button type="button" class="key-btn" data-insert="log()">ln</button>
+                            <button type="button" class="key-btn" data-insert="pi">π</button>
+                            <button type="button" class="key-btn" data-insert="Infinity">∞</button>
+                            <button type="button" class="key-btn" data-insert="/">÷</button>
+                            <button type="button" class="key-btn" data-insert="*">×</button>
+                        </div>
+                    </div>
+
+                    <!-- Preset Example Chips -->
+                    <div class="presets-wrapper">
+                        <span class="presets-title">Contoh Soal Cepat:</span>
+                        <div class="preset-chips" id="preset-chips-container">
+                            <!-- Dynamically populated or switchable -->
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons-group">
+                        <button id="btn-calculate" class="btn-primary-glow">
+                            <i data-lucide="sparkles"></i>
+                            <span>Hitung & Tampilkan Langkah</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Output & Steps Panel -->
+                <div class="calc-panel output-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-group">
+                            <i data-lucide="file-check-2" class="panel-icon text-cyan"></i>
+                            <h2>Hasil & Langkah Penyelesaian</h2>
+                        </div>
+                        <div class="output-actions">
+                            <button class="btn-icon-pill" id="btn-copy-solution" title="Salin Penyelesaian Lengkap">
+                                <i data-lucide="copy"></i>
+                                <span class="copy-text">Salin</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Final Answer Banner -->
+                    <div class="result-banner" id="result-banner">
+                        <div class="result-badge" id="result-type-badge">HASIL AKHIR</div>
+                        <div class="result-math-output" id="result-math-output">
+                            <!-- Rendered with KaTeX -->
+                            <span class="placeholder-text">Klik tombol "Hitung" untuk melihat hasil kalkulasi...</span>
+                        </div>
+                        <div class="result-subtext" id="result-subtext"></div>
+                    </div>
+
+                    <!-- Step-by-step breakdown container -->
+                    <div class="steps-container">
+                        <h3 class="steps-heading">
+                            <i data-lucide="list-ordered"></i>
+                            Alur Pengerjaan Sistematis
+                        </h3>
+
+                        <div id="steps-list" class="steps-list">
+                            <!-- Generated step cards -->
+                            <div class="empty-state">
+                                <i data-lucide="calculator" class="empty-icon"></i>
+                                <p>Masukkan fungsi dan parameter di samping, lalu tekan tombol <strong>Hitung</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Graph Card -->
+                    <div class="graph-card">
+                        <div class="graph-header">
+                            <div class="graph-title">
+                                <i data-lucide="line-chart"></i>
+                                <span>Visualisasi Kurva Geometri</span>
+                            </div>
+                            <span class="graph-badge" id="graph-info-badge">y = f(x)</span>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="math-graph-canvas"></canvas>
+                        </div>
+                        <p class="graph-footer-caption" id="graph-caption">Grafik menampilkan visualisasi fungsi di
+                            sekitar titik
+                            perhitungan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 2: PANDUAN BELAJAR ==================== -->
+        <section id="section-guide" class="content-section">
+            <div class="hero-header">
+                <div class="badge-pill">
+                    <i data-lucide="graduation-cap"></i> Modul Edukasi Lengkap
+                </div>
+                <h1 class="hero-title">Panduan Teori & Konsep <span class="gradient-text">Kalkulus</span></h1>
+                <p class="hero-desc">Kuasai konsep dasar hingga teknik lanjutan dengan penjelasan terstruktur, rumus
+                    esensial,
+                    dan contoh soal yang bisa langsung diuji di kalkulator.</p>
+            </div>
+
+            <!-- Guide Sub-navigation -->
+            <div class="guide-nav-tabs">
+                <button class="guide-tab-btn active" data-guide="guide-limit">
+                    <i data-lucide="arrow-right-to-line"></i> Panduan Limit Fungsi
+                </button>
+                <button class="guide-tab-btn" data-guide="guide-integral">
+                    <i data-lucide="sigma"></i> Panduan Integral & Luas
+                </button>
+                <button class="guide-tab-btn" data-guide="guide-cheatsheet" id="quick-cheatsheet">
+                    <i data-lucide="file-spreadsheet"></i> Ringkasan Rumus Cepat
+                </button>
+            </div>
+
+            <!-- GUIDE CONTENT CONTAINER -->
+            <div class="guide-content-area" id="guide-content-area">
+                <!-- Injected via JavaScript from guide-data.js -->
+            </div>
+        </section>
+
+        <!-- ==================== SECTION 3: KUIS & LATIHAN ==================== -->
+        <section id="section-quiz" class="content-section">
+            <div class="hero-header">
+                <div class="badge-pill">
+                    <i data-lucide="trophy"></i> Uji Kemampuan Matematika
+                </div>
+                <h1 class="hero-title">Kuis & Uji Pemahaman <span class="text-cyan">Limit</span> & <span
+                        class="text-purple">Integral</span></h1>
+                <p class="hero-desc">Uji pemahaman Anda dengan soal-soal latihan kalkulus bertingkat. Dapatkan
+                    pembahasan instan
+                    dan skor langsung!</p>
+            </div>
+
+            <div class="quiz-wrapper">
+                <div class="quiz-card">
+                    <div class="quiz-header">
+                        <div class="quiz-progress-bar-bg">
+                            <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 20%;"></div>
+                        </div>
+                        <div class="quiz-meta-row">
+                            <span id="quiz-question-number">Soal 1 dari 5</span>
+                            <span class="quiz-score-badge" id="quiz-current-score">Skor: 0</span>
+                        </div>
+                    </div>
+
+                    <div class="quiz-body">
+                        <div class="quiz-difficulty-tag" id="quiz-difficulty">Level: Dasar</div>
+                        <div class="quiz-question-text" id="quiz-question-content">
+                            <!-- Rendered math question -->
+                        </div>
+
+                        <div class="quiz-options-list" id="quiz-options-container">
+                            <!-- Option buttons injected here -->
+                        </div>
+
+                        <div class="quiz-explanation-box" id="quiz-explanation" style="display: none;">
+                            <!-- Detailed answer explanation -->
+                        </div>
+                    </div>
+
+                    <div class="quiz-footer">
+                        <button class="btn-ghost" id="btn-solve-in-calc" style="display: none;">
+                            <i data-lucide="external-link"></i> Buka Soal Ini di Kalkulator
+                        </button>
+                        <button class="btn-primary-glow" id="btn-next-question" style="display: none;">
+                            <span>Soal Berikutnya</span>
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <span class="footer-brand"><i data-lucide="function-square"></i> KalkulusPro</span>
+                <p>Aplikasi web interaktif untuk eksplorasi Limit & Integral dengan penjelasan terstruktur.</p>
+            </div>
+            <div class="footer-right">
+                <span>Dibangun dengan presisi untuk pembelajar matematika</span>
+                <div class="footer-tags">
+                    <span class="tech-tag">KaTeX Math</span>
+                    <span class="tech-tag">Nerdamer Engine</span>
+                    <span class="tech-tag">Chart.js Visualizer</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="guide-data.js"></script>
+    <script src="solver.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
